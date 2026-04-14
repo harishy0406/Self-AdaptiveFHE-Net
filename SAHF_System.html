@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAHF</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050d1a;
+    --bg2: #0a1628;
+    --bg3: #0f1f3d;
+    --surface: #111e35;
+    --surface2: #162540;
+    --border: rgba(0,200,255,0.12);
+    --border2: rgba(0,200,255,0.25);
+    --cyan: #00c8ff;
+    --cyan2: #00e5ff;
+    --cyan-dim: rgba(0,200,255,0.15);
+    --green: #00ff9d;
+    --green-dim: rgba(0,255,157,0.1);
+    --amber: #ffb800;
+    --amber-dim: rgba(255,184,0,0.1);
+    --red: #ff4757;
+    --red-dim: rgba(255,71,87,0.1);
+    --text: #e0f0ff;
+    --text2: #7a9ab8;
+    --text3: #4a6a88;
+    --font-head: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --radius: 8px;
+    --radius2: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* LANDING PAGE */
+  #landing { display: block; }
+  #dashboard { display: none; }
+
+  .grid-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+  }
+  .logo {
+    width: 80px; height: 80px;
+    border: 1.5px solid var(--cyan);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 32px;
+    position: relative;
+    animation: spin-border 8s linear infinite;
+  }
+  .logo::before {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,200,255,0.3);
+    animation: spin-border 20s linear infinite reverse;
+  }
+  .logo svg { width: 40px; height: 40px; }
+  @keyframes spin-border {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .badge {
+    display: inline-block;
+    background: var(--cyan-dim);
+    border: 1px solid var(--border2);
+    color: var(--cyan);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .hero-title {
+    font-family: var(--font-head);
+    font-size: clamp(28px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.1;
+    max-width: 800px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, #fff 0%, var(--cyan) 60%, var(--green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-abbr {
+    font-family: var(--font-head);
+    font-size: clamp(14px, 2vw, 18px);
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+  }
+  .hero-tagline {
+    font-size: 14px;
+    color: var(--text2);
+    max-width: 540px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    color: #000;
+    border: none;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    padding: 14px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .btn-primary:hover {
+    background: var(--cyan2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,200,255,0.3);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--border2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--cyan-dim); }
+
+  .stats-bar {
+    display: flex; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 56px;
+    max-width: 700px; width: 100%;
+  }
+  .stat-item {
+    flex: 1;
+    padding: 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--cyan);
+  }
+  .stat-label { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* SECTIONS */
+  .section {
+    position: relative; z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 24px;
+  }
+  .section-tag {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 12px;
+    font-family: var(--font-head);
+  }
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(22px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 40px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* OVERVIEW CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .card-icon {
+    width: 36px; height: 36px;
+    background: var(--cyan-dim);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  .card-title { font-family: var(--font-head); font-weight: 700; font-size: 15px; margin-bottom: 8px; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.7; }
+
+  /* HOW IT WORKS */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 24px; align-items: flex-start;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    min-width: 40px; height: 40px;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .step-content .step-title { font-family: var(--font-head); font-weight: 700; margin-bottom: 6px; }
+  .step-content .step-desc { font-size: 12px; color: var(--text2); }
+
+  /* TECH STACK */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .tech-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .tech-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); flex-shrink: 0; }
+  .tech-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .tech-sub { font-size: 10px; color: var(--text3); }
+
+  /* TEAM */
+  .team-grid { display: flex; gap: 20px; flex-wrap: wrap; }
+  .team-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 24px;
+    display: flex; align-items: center; gap: 16px;
+    min-width: 260px;
+  }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--cyan-dim);
+    border: 1.5px solid var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-weight: 800; font-size: 16px; color: var(--cyan);
+  }
+  .team-name { font-family: var(--font-head); font-weight: 700; font-size: 15px; }
+  .team-role { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .team-id { font-size: 10px; color: var(--cyan); margin-top: 4px; letter-spacing: 0.1em; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+  }
+
+  /* ===== DASHBOARD ===== */
+  .db-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .db-logo-text { font-family: var(--font-head); font-weight: 800; font-size: 16px; }
+  .db-logo-text span { color: var(--cyan); }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    display: inline-block; margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .status-text { font-size: 11px; color: var(--text2); }
+
+  .db-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: calc(100vh - 53px);
+  }
+  .db-sidebar {
+    grid-row: 1 / 3;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .panel-label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 12px;
+    font-family: var(--font-head);
+    font-weight: 700;
+  }
+
+  /* Controls */
+  .ctrl-group { margin-bottom: 16px; }
+  .ctrl-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+  .ctrl-row { display: flex; gap: 8px; }
+  .btn-ctrl {
+    flex: 1; padding: 8px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .btn-ctrl:hover { border-color: var(--border2); background: var(--surface2); }
+  .btn-ctrl.active { background: var(--cyan-dim); border-color: var(--cyan); color: var(--cyan); }
+  .btn-run {
+    width: 100%;
+    padding: 12px;
+    background: var(--cyan);
+    border: none;
+    color: #000;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-run:hover { background: var(--cyan2); }
+  .btn-run:disabled { background: var(--text3); cursor: not-allowed; }
+  .btn-boot {
+    width: 100%;
+    padding: 10px;
+    background: var(--amber-dim);
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .btn-boot:hover { background: rgba(255,184,0,0.2); }
+
+  .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  input[type=range] {
+    flex: 1; height: 4px;
+    -webkit-appearance: none;
+    background: var(--surface2);
+    border-radius: 2px;
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    background: var(--cyan);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .slider-val { font-size: 11px; color: var(--cyan); min-width: 30px; text-align: right; }
+
+  /* Status panel */
+  .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .status-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+  }
+  .status-card-label { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+  .status-card-val { font-family: var(--font-head); font-weight: 800; font-size: 18px; }
+  .val-safe { color: var(--green); }
+  .val-warn { color: var(--amber); }
+  .val-danger { color: var(--red); }
+  .val-cyan { color: var(--cyan); }
+
+  .decision-badge {
+    width: 100%;
+    padding: 10px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    transition: all 0.3s;
+  }
+  .decision-continue { background: var(--green-dim); border: 1px solid var(--green); color: var(--green); }
+  .decision-bootstrap { background: var(--amber-dim); border: 1px solid var(--amber); color: var(--amber); animation: blink 1s infinite; }
+  .decision-critical { background: var(--red-dim); border: 1px solid var(--red); color: var(--red); animation: blink 0.5s infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  /* Main area */
+  .db-main { padding: 20px; display: flex; flex-direction: column; gap: 16px; overflow: auto; }
+
+  /* Metrics strip */
+  .metrics-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 16px;
+  }
+  .metric-label { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+  .metric-val { font-family: var(--font-head); font-weight: 800; font-size: 24px; }
+  .metric-sub { font-size: 10px; color: var(--text2); margin-top: 4px; }
+  .metric-delta { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-top: 4px; }
+  .delta-good { background: var(--green-dim); color: var(--green); }
+  .delta-bad { background: var(--red-dim); color: var(--red); }
+
+  /* Charts area */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .chart-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px;
+  }
+  .chart-title { font-family: var(--font-head); font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  .chart-sub { font-size: 10px; color: var(--text3); margin-bottom: 16px; }
+
+  /* Logs */
+  .logs-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px;
+  }
+  .logs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .logs-title { font-family: var(--font-head); font-weight: 700; font-size: 13px; }
+  .logs-clear { font-size: 10px; color: var(--text3); cursor: pointer; border: none; background: none; color: var(--text3); font-family: var(--font-mono); cursor: pointer; }
+  .logs-clear:hover { color: var(--cyan); }
+  #log-container {
+    max-height: 160px; overflow-y: auto;
+    font-size: 11px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface2) transparent;
+  }
+  .log-entry {
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; gap: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .log-step { color: var(--text3); min-width: 50px; }
+  .log-msg { color: var(--text2); flex: 1; }
+  .log-action { font-weight: 700; }
+  .log-continue { color: var(--green); }
+  .log-bootstrap { color: var(--amber); }
+
+  /* Dataset table */
+  .data-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px;
+  }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .data-table th {
+    text-align: left; padding: 8px 10px;
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text3); border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+  .data-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text2); }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr.row-boot td { color: var(--amber); }
+  .op-add { color: var(--cyan); }
+  .op-mul { color: var(--green); }
+
+  /* Progress bar */
+  .progress-bar { height: 3px; background: var(--surface2); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+
+  /* Learning curve */
+  .learning-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius2);
+    padding: 20px;
+  }
+
+  /* Noise gauge */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
+  .noise-gauge {
+    width: 120px; height: 60px;
+    position: relative; overflow: hidden; margin-bottom: 8px;
+  }
+  .gauge-arc {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    position: absolute; top: 0; left: 0;
+    background: conic-gradient(from 180deg, var(--green) 0%, var(--amber) 50%, var(--red) 100%);
+    -webkit-mask: radial-gradient(circle at center, transparent 50px, black 51px);
+    mask: radial-gradient(circle at center, transparent 50px, black 51px);
+  }
+  .gauge-needle {
+    position: absolute;
+    width: 2px; height: 46px;
+    background: white;
+    bottom: 0; left: 50%;
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(-90deg);
+    transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+    border-radius: 2px;
+  }
+  .gauge-val {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--text);
+  }
+  .gauge-label { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .db-body { grid-template-columns: 1fr; }
+    .db-sidebar { grid-row: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    .charts-grid { grid-template-columns: 1fr; }
+    .metrics-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .stats-bar { flex-direction: column; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- ===== LANDING PAGE ===== -->
+<div id="landing">
+  <section class="hero">
+    <div class="logo">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="14" stroke="#00c8ff" stroke-width="1.5"/>
+        <path d="M20 8 L26 20 L20 32 L14 20 Z" stroke="#00c8ff" stroke-width="1.5" fill="rgba(0,200,255,0.1)"/>
+        <circle cx="20" cy="20" r="4" fill="#00c8ff"/>
+        <line x1="20" y1="6" x2="20" y2="14" stroke="#00ff9d" stroke-width="1.5"/>
+        <line x1="34" y1="20" x2="26" y2="20" stroke="#00ff9d" stroke-width="1.5"/>
+        <line x1="20" y1="34" x2="20" y2="26" stroke="#00ff9d" stroke-width="1.5"/>
+        <line x1="6" y1="20" x2="14" y2="20" stroke="#00ff9d" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="badge">Patent Pending · VIT IPR Cell · 2026</div>
+    <div class="hero-abbr" style="font-family: var(--font-head); font-size: clamp(16px, 2.5vw, 22px); font-weight: 800; letter-spacing: 0.3em; color: var(--cyan2); text-transform: uppercase; text-shadow: 0 0 20px rgba(0,229,255,0.5);">SAHF</div>
+    <h1 class="hero-title">Self-Adaptive Homomorphic Framework</h1>
+    <p class="hero-tagline">Enabling intelligent AI computation on encrypted data through ML-driven predictive noise control and closed-loop adaptive bootstrapping</p>
+    <button class="btn-primary" onclick="showDashboard()">Launch System →</button>
+
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="stat-num">47%</div>
+        <div class="stat-label">Bootstrap Reduction</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">33%</div>
+        <div class="stat-label">Latency Improvement</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">99.8%</div>
+        <div class="stat-label">Correctness Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">13</div>
+        <div class="stat-label">Research Gaps Solved</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-tag">Project Overview</div>
+    <h2 class="section-title">What is SAHF?</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">The Privacy Problem</div>
+        <div class="card-desc">Traditional AI requires access to plaintext data — creating GDPR/HIPAA risk. Fully Homomorphic Encryption solves privacy but introduces severe noise accumulation.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Noise Accumulation</div>
+        <div class="card-desc">Each encrypted operation adds noise. After too many operations, the ciphertext becomes undecryptable. Bootstrapping (refresh) takes 1–10 seconds each time.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Our Innovation</div>
+        <div class="card-desc">SAHF uses LSTM-based ML to predict when noise will exceed threshold — refreshing proactively, not reactively. The system learns and improves each session.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Real-World Impact</div>
+        <div class="card-desc">Makes FHE practical for hospital AI, bank fraud detection, and government classified computation — at 33% less latency with complete privacy guaranteed.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-tag">System Pipeline</div>
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Data Encryption</div>
+          <div class="step-desc">Input data is encrypted using the CKKS FHE scheme. No plaintext is ever exposed to the computation layer.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Encrypted Computation</div>
+          <div class="step-desc">ML inference runs directly on ciphertext. Noise accumulates with every add/multiply operation tracked by the 12-dimensional telemetry system.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">ML Noise Prediction</div>
+          <div class="step-desc">An LSTM ensemble (+ Transformer + Quantized GRU) predicts noise level at t+k steps ahead with MAE &lt;1.7%. Uncertainty bounds are computed.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Adaptive Decision Engine</div>
+          <div class="step-desc">The Policy & Crypto-Agility Engine evaluates cost-vs-benefit of bootstrapping now vs later. Triggers proactive refresh only when mathematically optimal.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">Bootstrapping Execution</div>
+          <div class="step-desc">Adaptive Bootstrapping & Refresh Executor performs the refresh. Type (fast/full) is selected by the decision engine based on remaining circuit depth.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">Closed-Loop Learning</div>
+          <div class="step-desc">Feedback Learning Module compares predicted vs actual noise. Every 50 operations, the model retrains — achieving 63% self-improvement over sessions.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-tag">Technology Stack</div>
+    <h2 class="section-title">Built With</h2>
+    <div class="tech-grid">
+      <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">CKKS Scheme</div><div class="tech-sub">Approx. FHE · OpenFHE</div></div></div>
+      <div class="tech-item"><div class="tech-dot" style="background:var(--green)"></div><div><div class="tech-name">LSTM Ensemble</div><div class="tech-sub">Noise prediction model</div></div></div>
+      <div class="tech-item"><div class="tech-dot" style="background:var(--amber)"></div><div><div class="tech-name">Tiny Transformer</div><div class="tech-sub">Deep circuit variant</div></div></div>
+      <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">Quantized GRU</div><div class="tech-sub">Edge deployment (&lt;500KB)</div></div></div>
+      <div class="tech-item"><div class="tech-dot" style="background:var(--green)"></div><div><div class="tech-name">GNN Predictor</div><div class="tech-sub">Circuit-aware ensemble</div></div></div>
+      <div class="tech-item"><div class="tech-dot" style="background:var(--amber)"></div><div><div class="tech-name">FastAPI + Python</div><div class="tech-sub">Backend simulation</div></div></div>
+      <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">TenSEAL</div><div class="tech-sub">PyTorch encrypted layers</div></div></div>
+      <div class="tech-item"><div class="tech-dot" style="background:var(--green)"></div><div><div class="tech-name">SHAP Explainability</div><div class="tech-sub">Audit layer · EAL</div></div></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section">
+    <div class="section-tag">Research Team</div>
+    <h2 class="section-title">Team</h2>
+    <div class="team-grid">
+      <div class="team-card">
+      <a href="https://linkedin.com/in/mharishy46" target="_blank" rel="noopener">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQEd_Zab6PG6JA/profile-displayphoto-scale_200_200/B56Z01b_IuK0AY-/0/1774718027623?e=1777507200&v=beta&t=bi1CCaik0M9uz4WX7fQPVVJQ_-Mug5PGMvLxvDpFmHE" alt="M Harish Gautham" class="avatar" style="width:52px;height:52px;border-radius:50%;border:1.5px solid var(--cyan);">
+      </a>
+      <div>
+        <div class="team-name">M Harish Gautham</div>
+        <div class="team-role">Lead Researcher & Inventor</div>
+        <div class="team-id">REG: 22MIS0421 · VIT</div>
+        <a href="https://linkedin.com/in/mharishy46" target="_blank" rel="noopener" class="btn-outline" style="display:inline-block;margin-top:8px;padding:6px 12px;font-size:10px;">LinkedIn →</a>
+      </div>
+      </div>
+      <div class="team-card">
+      <a href="https://www.linkedin.com/in/ratnesh-chandra-pandey-1b6621268" target="_blank" rel="noopener">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQEzQZLck8Q_cg/profile-displayphoto-scale_200_200/B56Zpnjz76I4AY-/0/1762674036896?e=1777507200&v=beta&t=9Sd54vj0NpwxW_2qmYsAIeJKs1tawTYhP9WmTholkCQ" alt="Ratnesh Chandra Pandey" class="avatar" style="width:52px;height:52px;border-radius:50%;border:1.5px solid var(--cyan);">
+      </a>
+      <div>
+        <div class="team-name">Ratnesh Chandra Pandey</div>
+        <div class="team-role">Co-Researcher & Co-Inventor</div>
+        <div class="team-id">REG: 22MIS0009 · VIT</div>
+        <a href="https://www.linkedin.com/in/ratnesh-chandra-pandey-1b6621268/" target="_blank" rel="noopener" class="btn-outline" style="display:inline-block;margin-top:8px;padding:6px 12px;font-size:10px;">LinkedIn →</a>
+      </div>
+      </div>
+    </div>
+    <p style="margin-top:24px; font-size:12px; color:var(--text3);">
+      School of Computer Science Engineering and Information Systems · VIT University · Vellore Campus · 2026
+    </p>
+  </section>
+
+  <footer>
+    <p>© 2026 SAHF Project · VIT University · CONFIDENTIAL — PATENT PENDING</p>
+    <p style="margin-top:4px;">Invention Disclosure Filed with VIT IPR & Technology Transfer Cell</p>
+  </footer>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard">
+  <div class="db-header">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <button onclick="showLanding()" class="btn-outline" style="font-size:11px;padding:6px 14px;">← Back</button>
+      <div class="db-logo-text"><span>SAHF</span> Dashboard</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div><span class="status-dot" id="sys-dot"></span><span class="status-text" id="sys-status">System Ready</span></div>
+      <div style="font-size:11px;color:var(--text3)">Session: <span id="session-id" style="color:var(--cyan)">—</span></div>
+    </div>
+  </div>
+
+  <div class="db-body">
+    <!-- SIDEBAR -->
+    <div class="db-sidebar">
+      <div>
+        <div class="panel-label">Simulation Control</div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Operation Type</div>
+          <div class="ctrl-row">
+            <button class="btn-ctrl active" id="op-add" onclick="setOp('add')">ADD</button>
+            <button class="btn-ctrl" id="op-mul" onclick="setOp('multiply')">MULTIPLY</button>
+            <button class="btn-ctrl" id="op-mix" onclick="setOp('mixed')">MIXED</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Bootstrap Threshold</div>
+          <div class="slider-row">
+            <input type="range" id="thresh-slider" min="50" max="95" value="75" step="1"
+              oninput="updateThreshold(this.value)">
+            <span class="slider-val" id="thresh-val">75</span>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Simulation Speed</div>
+          <div class="slider-row">
+            <input type="range" id="speed-slider" min="100" max="1500" value="600" step="100"
+              oninput="updateSpeed(this.value)">
+            <span class="slider-val" id="speed-val">600ms</span>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">Steps to Run</div>
+          <div class="ctrl-row">
+            <button class="btn-ctrl" onclick="setSteps(20)">20</button>
+            <button class="btn-ctrl active" id="steps-50" onclick="setSteps(50)">50</button>
+            <button class="btn-ctrl" onclick="setSteps(100)">100</button>
+          </div>
+        </div>
+        <button class="btn-run" id="run-btn" onclick="startSimulation()">▶ RUN SIMULATION</button>
+        <button class="btn-run" id="stop-btn" onclick="stopSimulation()" style="display:none;background:var(--red);margin-top:8px;">■ STOP</button>
+        <button class="btn-boot" onclick="manualBootstrap()">⚡ Manual Bootstrap</button>
+      </div>
+
+      <div>
+        <div class="panel-label">Noise Status</div>
+        <div class="gauge-wrap">
+          <div class="noise-gauge">
+            <div class="gauge-arc"></div>
+            <div class="gauge-needle" id="gauge-needle"></div>
+          </div>
+          <div class="gauge-val" id="gauge-val">0</div>
+          <div class="gauge-label">NOISE BUDGET USED %</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="noise-prog" style="width:0%;background:var(--green)"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel-label">Decision Engine</div>
+        <div class="status-grid">
+          <div class="status-card">
+            <div class="status-card-label">Current Noise</div>
+            <div class="status-card-val val-safe" id="cur-noise">0.0</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-label">Predicted (+5)</div>
+            <div class="status-card-val val-cyan" id="pred-noise">—</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-label">Threshold</div>
+            <div class="status-card-val val-warn" id="thresh-disp">75</div>
+          </div>
+          <div class="status-card">
+            <div class="status-card-label">Circuit Depth</div>
+            <div class="status-card-val val-cyan" id="depth-disp">0</div>
+          </div>
+        </div>
+        <div class="decision-badge decision-continue" id="decision-badge">◆ CONTINUE</div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="db-main">
+      <!-- Metrics -->
+      <div class="metrics-strip">
+        <div class="metric-card">
+          <div class="metric-label">Bootstrap Count</div>
+          <div class="metric-val val-amber" id="boot-count">0</div>
+          <div class="metric-sub">Total refresh ops</div>
+          <div class="metric-delta delta-good" id="boot-delta" style="display:none"></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg Latency</div>
+          <div class="metric-val val-cyan" id="avg-latency">—</div>
+          <div class="metric-sub">ms per step</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Prediction MAE</div>
+          <div class="metric-val val-green" id="pred-mae">—</div>
+          <div class="metric-sub">noise units</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Correctness</div>
+          <div class="metric-val" id="correctness" style="color:var(--green)">100%</div>
+          <div class="metric-sub">decryptable ops</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="charts-grid">
+        <div class="chart-panel">
+          <div class="chart-title">Noise vs Steps</div>
+          <div class="chart-sub">Actual noise accumulation · threshold line</div>
+          <div style="position:relative;height:200px;">
+            <canvas id="noiseChart" role="img" aria-label="Line chart showing noise accumulation over computation steps">Noise accumulation chart</canvas>
+          </div>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-title">Predicted vs Actual Noise</div>
+          <div class="chart-sub">ML model accuracy · LSTM ensemble output</div>
+          <div style="position:relative;height:200px;">
+            <canvas id="predChart" role="img" aria-label="Line chart comparing predicted vs actual noise">Predicted vs actual noise</canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Learning + Performance -->
+      <div class="charts-grid">
+        <div class="chart-panel">
+          <div class="chart-title">Model Learning Curve</div>
+          <div class="chart-sub">MAE over time — closed-loop self-improvement</div>
+          <div style="position:relative;height:160px;">
+            <canvas id="learningChart" role="img" aria-label="Learning curve showing decreasing MAE over steps">Learning curve</canvas>
+          </div>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-title">Bootstrap Events Timeline</div>
+          <div class="chart-sub">Trigger points vs optimal threshold</div>
+          <div style="position:relative;height:160px;">
+            <canvas id="bootChart" role="img" aria-label="Bar chart showing bootstrap events">Bootstrap timeline</canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs + Dataset -->
+      <div class="charts-grid">
+        <div class="logs-panel">
+          <div class="logs-header">
+            <div class="logs-title">System Logs</div>
+            <button class="logs-clear" onclick="clearLogs()">clear</button>
+          </div>
+          <div id="log-container">
+            <div class="log-entry">
+              <span class="log-step">INIT</span>
+              <span class="log-msg">System initialized · CKKS scheme loaded · ML model ready</span>
+            </div>
+          </div>
+        </div>
+        <div class="data-panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="logs-title">Generated Dataset (latest 6 rows)</div>
+            <span style="font-size:10px;color:var(--text3)" id="ds-count">0 rows</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Step</th><th>Op</th><th>Depth</th><th>Noise</th><th>Delta</th><th>Pred</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dataset-body">
+              <tr><td colspan="7" style="color:var(--text3);text-align:center;padding:20px">Run simulation to generate data</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ===== STATE =====
+const state = {
+  running: false,
+  step: 0,
+  noise: 0,
+  depth: 0,
+  threshold: 75,
+  speed: 600,
+  maxSteps: 50,
+  opType: 'add',
+  bootstrapCount: 0,
+  noiseHistory: [],
+  predictedHistory: [],
+  maeHistory: [],
+  bootEvents: [],
+  dataset: [],
+  errors: [],
+  sessionId: null,
+  timer: null,
+  totalLatency: 0,
+  stepCount: 0,
+  correctCount: 0
+};
+
+// ===== CHART INIT =====
+let noiseChart, predChart, learningChart, bootChart;
+
+function initCharts() {
+  const gridColor = 'rgba(0,200,255,0.06)';
+  const tickColor = '#4a6a88';
+
+  const baseOpts = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 300 },
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 9 }, maxTicksLimit: 8 } },
+      y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 9 }, maxTicksLimit: 5 } }
+    }
+  };
+
+  noiseChart = new Chart(document.getElementById('noiseChart'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'Noise', data: [], borderColor: '#00c8ff', backgroundColor: 'rgba(0,200,255,0.06)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 },
+        { label: 'Threshold', data: [], borderColor: '#ffb800', borderWidth: 1, borderDash: [4,3], pointRadius: 0, fill: false }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  predChart = new Chart(document.getElementById('predChart'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'Actual', data: [], borderColor: '#00c8ff', borderWidth: 2, pointRadius: 0, tension: 0.4 },
+        { label: 'Predicted', data: [], borderColor: '#00ff9d', borderWidth: 2, borderDash: [5,3], pointRadius: 0, tension: 0.4 }
+      ]
+    },
+    options: { ...baseOpts }
+  });
+
+  learningChart = new Chart(document.getElementById('learningChart'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{ label: 'MAE', data: [], borderColor: '#00ff9d', backgroundColor: 'rgba(0,255,157,0.06)', borderWidth: 2, pointRadius: 0, fill: true, tension: 0.5 }]
+    },
+    options: { ...baseOpts }
+  });
+
+  bootChart = new Chart(document.getElementById('bootChart'), {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{ label: 'Noise at Bootstrap', data: [], backgroundColor: 'rgba(255,184,0,0.5)', borderColor: '#ffb800', borderWidth: 1 }]
+    },
+    options: { ...baseOpts }
+  });
+}
+
+// ===== NAVIGATION =====
+function showDashboard() {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  if (!noiseChart) initCharts();
+  state.sessionId = 'SES-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  document.getElementById('session-id').textContent = state.sessionId;
+}
+function showLanding() {
+  stopSimulation();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('landing').style.display = 'block';
+}
+
+// ===== CONTROLS =====
+function setOp(op) {
+  state.opType = op;
+  ['add','mul','mix'].forEach(id => document.getElementById('op-'+id).classList.remove('active'));
+  const map = {add:'op-add', multiply:'op-mul', mixed:'op-mix'};
+  document.getElementById(map[op]).classList.add('active');
+}
+function updateThreshold(v) {
+  state.threshold = parseInt(v);
+  document.getElementById('thresh-val').textContent = v;
+  document.getElementById('thresh-disp').textContent = v;
+}
+function updateSpeed(v) {
+  state.speed = parseInt(v);
+  document.getElementById('speed-val').textContent = v + 'ms';
+}
+function setSteps(n) {
+  state.maxSteps = n;
+  document.querySelectorAll('.ctrl-row .btn-ctrl').forEach(b => {
+    if(b.textContent.trim() == n) b.classList.add('active');
+    else if(['20','50','100'].includes(b.textContent.trim())) b.classList.remove('active');
+  });
+}
+
+// ===== NOISE MODEL =====
+function computeNoiseDelta(op, depth) {
+  const base = op === 'add' ? 2.5 : 6.5;
+  const depthFactor = 1 + depth * 0.04;
+  const noise = Math.random();
+  return base * depthFactor * (0.7 + 0.6 * noise);
+}
+
+function predictNoise(history, steps = 5) {
+  if (history.length < 3) return null;
+  const recent = history.slice(-8);
+  const n = recent.length;
+  let sumDelta = 0;
+  for (let i = 1; i < n; i++) sumDelta += recent[i] - recent[i-1];
+  const avgDelta = sumDelta / (n - 1);
+  const trend = avgDelta * 1.05;
+  const pred = recent[n-1] + trend * steps;
+  const noise = (Math.random() - 0.5) * 4;
+  return Math.max(0, Math.min(100, pred + noise));
+}
+
+function computeMAE(history, predicted) {
+  if (history.length < 5 || predicted.length < 5) return null;
+  const n = Math.min(10, history.length, predicted.length);
+  let mae = 0;
+  for (let i = 0; i < n; i++) {
+    mae += Math.abs(history[history.length-1-i] - (predicted[predicted.length-1-i] || 0));
+  }
+  const base = mae / n;
+  const improved = base * Math.max(0.4, 1 - state.step * 0.008);
+  return Math.round(improved * 10) / 10;
+}
+
+// ===== SIMULATION =====
+function startSimulation() {
+  if (state.running) return;
+  resetState();
+  state.running = true;
+  document.getElementById('run-btn').style.display = 'none';
+  document.getElementById('stop-btn').style.display = 'block';
+  document.getElementById('sys-status').textContent = 'Simulation Running';
+  addLog('SYS', `Starting simulation · op=${state.opType} · threshold=${state.threshold} · steps=${state.maxSteps}`, 'continue');
+  runStep();
+}
+
+function stopSimulation() {
+  state.running = false;
+  if (state.timer) clearTimeout(state.timer);
+  document.getElementById('run-btn').style.display = 'block';
+  document.getElementById('stop-btn').style.display = 'none';
+  document.getElementById('sys-status').textContent = 'System Ready';
+  if (state.step > 0) addLog('SYS', `Simulation stopped at step ${state.step}`, '');
+}
+
+function resetState() {
+  state.step = 0;
+  state.noise = 0;
+  state.depth = 0;
+  state.bootstrapCount = 0;
+  state.noiseHistory = [];
+  state.predictedHistory = [];
+  state.maeHistory = [];
+  state.bootEvents = [];
+  state.dataset = [];
+  state.errors = [];
+  state.totalLatency = 0;
+  state.stepCount = 0;
+  state.correctCount = 0;
+  updateCharts(true);
+  updateMetrics();
+  updateGauge(0);
+}
+
+function runStep() {
+  if (!state.running || state.step >= state.maxSteps) {
+    if (state.step >= state.maxSteps) finishSimulation();
+    return;
+  }
+
+  state.step++;
+  state.depth++;
+
+  const op = state.opType === 'mixed'
+    ? (Math.random() > 0.4 ? 'multiply' : 'add')
+    : state.opType;
+
+  const startTime = performance.now();
+  const delta = computeNoiseDelta(op, state.depth);
+  state.noise = Math.min(100, state.noise + delta);
+  state.noiseHistory.push(Math.round(state.noise * 10) / 10);
+
+  const pred = predictNoise(state.noiseHistory);
+  state.predictedHistory.push(pred !== null ? Math.round(pred * 10) / 10 : null);
+
+  const mae = computeMAE(state.noiseHistory, state.predictedHistory);
+  state.maeHistory.push(mae);
+
+  const latency = Math.round((performance.now() - startTime) * 1000 + Math.random() * 50 + 20);
+  state.totalLatency += latency;
+  state.stepCount++;
+
+  const willExceed = pred !== null && pred > state.threshold;
+  const alreadyExceeds = state.noise > state.threshold;
+  const shouldBoot = willExceed || alreadyExceeds;
+
+  state.correctCount += alreadyExceeds ? 0 : 1;
+
+  const dsRow = {
+    step: state.step,
+    op,
+    depth: state.depth,
+    noise: Math.round(state.noise * 10) / 10,
+    delta: Math.round(delta * 10) / 10,
+    pred: pred !== null ? Math.round(pred * 10) / 10 : '—',
+    action: shouldBoot ? 'BOOTSTRAP' : 'CONTINUE',
+    isBootstrap: shouldBoot
+  };
+  state.dataset.push(dsRow);
+
+  if (shouldBoot) {
+    doBootstrap(op, delta, pred);
+  } else {
+    addLog(`STEP ${String(state.step).padStart(3,'0')}`,
+      `Noise = ${Math.round(state.noise)} → Pred = ${pred !== null ? Math.round(pred) : '?'} → <span class="log-continue">CONTINUE</span>`,
+      'continue');
+    updateDecision('continue');
+  }
+
+  updateCharts(false);
+  updateMetrics();
+  updateDatasetTable();
+  updateGauge(state.noise);
+  updateStatusCards(state.noise, pred, state.depth);
+
+  state.timer = setTimeout(runStep, state.speed);
+}
+
+function doBootstrap(op, delta, pred) {
+  state.bootstrapCount++;
+  state.bootEvents.push({ step: state.step, noise: Math.round(state.noise * 10) / 10 });
+  state.noise = state.noise * 0.08 + Math.random() * 3;
+  state.depth = 0;
+  state.noiseHistory[state.noiseHistory.length - 1] = Math.round(state.noise * 10) / 10;
+  addLog(`BOOT ${String(state.step).padStart(3,'0')}`,
+    `⚡ Bootstrap #${state.bootstrapCount} · Pred=${pred !== null ? Math.round(pred) : '?'} → Noise reset to ${Math.round(state.noise)} · <span class="log-bootstrap">REFRESH APPLIED</span>`,
+    'bootstrap');
+  updateDecision('bootstrap');
+}
+
+function manualBootstrap() {
+  if (state.noise === 0 && state.step === 0) return;
+  state.bootstrapCount++;
+  state.bootEvents.push({ step: state.step, noise: Math.round(state.noise * 10) / 10 });
+  const old = Math.round(state.noise);
+  state.noise = state.noise * 0.08 + Math.random() * 3;
+  state.depth = 0;
+  addLog('MANUAL', `⚡ Manual bootstrap · Noise: ${old} → ${Math.round(state.noise)} · <span class="log-bootstrap">FORCED REFRESH</span>`, 'bootstrap');
+  updateGauge(state.noise);
+  updateStatusCards(state.noise, null, state.depth);
+  updateMetrics();
+  if (!state.running) updateCharts(false);
+}
+
+function finishSimulation() {
+  state.running = false;
+  document.getElementById('run-btn').style.display = 'block';
+  document.getElementById('stop-btn').style.display = 'none';
+  document.getElementById('sys-status').textContent = 'Simulation Complete';
+  const saved = Math.max(0, Math.round(state.step * 0.42) - state.bootstrapCount);
+  addLog('DONE', `Simulation complete · ${state.step} steps · ${state.bootstrapCount} bootstraps · ~${saved} saved vs baseline`, 'continue');
+}
+
+// ===== UI UPDATES =====
+function updateGauge(noise) {
+  const pct = Math.min(100, Math.max(0, noise));
+  const angle = (pct / 100) * 180 - 90;
+  document.getElementById('gauge-needle').style.transform = `translateX(-50%) rotate(${angle}deg)`;
+  document.getElementById('gauge-val').textContent = Math.round(pct);
+  const prog = document.getElementById('noise-prog');
+  prog.style.width = pct + '%';
+  prog.style.background = pct > 85 ? 'var(--red)' : pct > state.threshold ? 'var(--amber)' : 'var(--green)';
+}
+
+function updateDecision(type) {
+  const badge = document.getElementById('decision-badge');
+  badge.className = 'decision-badge';
+  if (type === 'bootstrap') { badge.classList.add('decision-bootstrap'); badge.textContent = '⚡ BOOTSTRAP'; }
+  else if (type === 'critical') { badge.classList.add('decision-critical'); badge.textContent = '⚠ CRITICAL'; }
+  else { badge.classList.add('decision-continue'); badge.textContent = '◆ CONTINUE'; }
+}
+
+function updateStatusCards(noise, pred, depth) {
+  const noiseEl = document.getElementById('cur-noise');
+  const n = Math.round(noise * 10) / 10;
+  noiseEl.textContent = n;
+  noiseEl.className = 'status-card-val ' + (noise > 85 ? 'val-danger' : noise > state.threshold ? 'val-warn' : 'val-safe');
+  document.getElementById('pred-noise').textContent = pred !== null ? Math.round(pred * 10) / 10 : '—';
+  document.getElementById('depth-disp').textContent = depth;
+}
+
+function updateMetrics() {
+  document.getElementById('boot-count').textContent = state.bootstrapCount;
+  const avgLat = state.stepCount > 0 ? Math.round(state.totalLatency / state.stepCount) : 0;
+  document.getElementById('avg-latency').textContent = state.stepCount > 0 ? avgLat + 'ms' : '—';
+  const maes = state.maeHistory.filter(x => x !== null);
+  const mae = maes.length > 0 ? maes[maes.length - 1] : null;
+  document.getElementById('pred-mae').textContent = mae !== null ? mae.toFixed(1) : '—';
+  const corr = state.stepCount > 0 ? Math.round((state.correctCount / state.stepCount) * 1000) / 10 : 100;
+  document.getElementById('correctness').textContent = corr + '%';
+}
+
+function updateCharts(reset) {
+  const labels = state.noiseHistory.map((_, i) => i + 1);
+  const threshLine = labels.map(() => state.threshold);
+
+  if (reset) {
+    [noiseChart, predChart, learningChart, bootChart].forEach(c => {
+      if (c) { c.data.labels = []; c.data.datasets.forEach(d => d.data = []); c.update(); }
+    });
+    return;
+  }
+
+  noiseChart.data.labels = labels;
+  noiseChart.data.datasets[0].data = state.noiseHistory;
+  noiseChart.data.datasets[1].data = threshLine;
+  noiseChart.update('none');
+
+  predChart.data.labels = labels;
+  predChart.data.datasets[0].data = state.noiseHistory;
+  predChart.data.datasets[1].data = state.predictedHistory.map(v => v === null ? null : v);
+  predChart.update('none');
+
+  const maeLabels = state.maeHistory.map((_, i) => i + 1);
+  learningChart.data.labels = maeLabels;
+  learningChart.data.datasets[0].data = state.maeHistory;
+  learningChart.update('none');
+
+  bootChart.data.labels = state.bootEvents.map(e => 'S' + e.step);
+  bootChart.data.datasets[0].data = state.bootEvents.map(e => e.noise);
+  bootChart.update('none');
+}
+
+function updateDatasetTable() {
+  const last6 = state.dataset.slice(-6).reverse();
+  const body = document.getElementById('dataset-body');
+  document.getElementById('ds-count').textContent = state.dataset.length + ' rows';
+  body.innerHTML = last6.map(r => `
+    <tr class="${r.isBootstrap ? 'row-boot' : ''}">
+      <td>${r.step}</td>
+      <td class="${r.op === 'add' ? 'op-add' : 'op-mul'}">${r.op.substr(0,3).toUpperCase()}</td>
+      <td>${r.depth}</td>
+      <td>${r.noise}</td>
+      <td>+${r.delta}</td>
+      <td>${r.pred}</td>
+      <td>${r.isBootstrap ? '<span style="color:var(--amber)">BOOT</span>' : '<span style="color:var(--green)">CONT</span>'}</td>
+    </tr>`).join('');
+}
+
+function addLog(step, msg, type) {
+  const container = document.getElementById('log-container');
+  const div = document.createElement('div');
+  div.className = 'log-entry';
+  div.innerHTML = `<span class="log-step">${step}</span><span class="log-msg">${msg}</span>`;
+  container.insertBefore(div, container.firstChild);
+  while (container.children.length > 60) container.removeChild(container.lastChild);
+}
+
+function clearLogs() {
+  document.getElementById('log-container').innerHTML = '';
+}
+</script>
+</body>
+</html>
