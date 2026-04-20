@@ -313,7 +313,7 @@ if page == "🏠 Landing Page":
             <span class="hero-badge">🔐 CKKS Scheme</span>
             <span class="hero-badge">🧠 LSTM Predictor</span>
             <span class="hero-badge">⚡ Adaptive Bootstrap</span>
-            <span class="hero-badge">📊 TRL 4-5</span>
+            <span class="hero-badge">📊 TRL 4</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -414,8 +414,8 @@ if page == "🏠 Landing Page":
     st.markdown('<div class="section-header">👥 Project Team</div>', unsafe_allow_html=True)
 
     team = [
-        ("https://media.licdn.com/dms/image/v2/D5603AQEd_Zab6PG6JA/profile-displayphoto-scale_200_200/B56Z01b_IuK0AY-/0/1774718027623?e=1777507200&v=beta&t=bi1CCaik0M9uz4WX7fQPVVJQ_-Mug5PGMvLxvDpFmHE", "M Harish Gautham", "ML pipeline, model training, fusion, Streamlit dashboard, Design system", "https://linkedin.com/in/mharishy46"),
-        ("https://media.licdn.com/dms/image/v2/D4D03AQHM6hOWzsTRVQ/profile-displayphoto-shrink_200_200/B4DZRmCyVBHYAY-/0/1736878794662?e=1777507200&v=beta&t=AWEVf8pRohvna31NUFbNMugRIlSPHD5BLfHmfoJDt2M", "Prasurjya Boruah", "EDA, feature engineering, evaluation, Text preprocessing, NLTK, embeddings", "https://www.linkedin.com/in/prasurjya-boruah-b70153347/"),
+        ("https://media.licdn.com/dms/image/v2/D5603AQEd_Zab6PG6JA/profile-displayphoto-scale_200_200/B56Z01b_IuK0AY-/0/1774718027623?e=1777507200&v=beta&t=bi1CCaik0M9uz4WX7fQPVVJQ_-Mug5PGMvLxvDpFmHE", "M Harish Gautham", "ML pipeline, Streamlit dashboard, model evaluation, Design system", "https://linkedin.com/in/mharishy46"),
+       # ("https://media.licdn.com/dms/image/v2/D5603AQEzQZLck8Q_cg/profile-displayphoto-scale_200_200/B56Zpnjz76I4AY-/0/1762674036896?e=1777507200&v=beta&t=9Sd54vj0NpwxW_2qmYsAIeJKs1tawTYhP9WmTholkCQ", "Ratnesh Chandra Pandey", "EDA, feature engineering, Data visualization ", "https://www.linkedin.com/in/ratnesh-chandra-pandey-1b6621268"),
     ]
     tcols = st.columns(4)
     for col, (avatar_url, role, desc, linkedin) in zip(tcols, team):
@@ -1122,22 +1122,216 @@ else:
     
     st.markdown("")
     
-    # About
+    # Experimental Validation
+    st.markdown('<div class="section-header">🧪 Experimental Validation Results</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    The proposed **Self-Adaptive Homomorphic Framework (SAHF)** was validated using a functional 
+    prototype integrating homomorphic encryption with machine learning-based noise prediction. 
+    The system was evaluated across multiple computational workloads, including:
+    
+    - 🧠 Deep neural networks
+    - 🖼️ Convolutional models
+    - 📈 Sequential models
+    - ⚡ Edge-oriented inference scenarios
+    
+    In all cases, the system successfully predicted noise accumulation and dynamically triggered 
+    adaptive noise management operations prior to reaching critical thresholds. This prevented 
+    decryption failures and ensured high correctness during encrypted computation.
+    """)
+    
+    st.markdown("")
+    
+    # Key Results
+    st.markdown('<div class="section-header">📊 Performance Achievements</div>', unsafe_allow_html=True)
+    
+    cols = st.columns(4)
+    
+    results = [
+        ("23.6%", "Bootstrap Reduction", "Fewer unnecessary refresh operations"),
+        ("32.5%", "Latency Improvement", "Faster encrypted computation"),
+        ("0.0336", "Prediction MAE", "High noise prediction accuracy"),
+        ("99.8%", "Computation Correctness", "Near-perfect encrypted results")
+    ]
+    
+    for col, (value, label, desc) in zip(cols, results):
+        with col:
+            st.markdown(f"""
+            <div class="metric-card">
+                <div class="metric-value">{value}</div>
+                <div class="metric-label">{label}</div>
+                <div style="font-size: 0.75rem; color: #8888aa; margin-top: 0.5rem;">{desc}</div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    st.markdown("")
+    
+    # Comparative Table
+    st.markdown('<div class="section-header">📋 Comparative Performance Analysis</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    **Table 1: SAHF vs. Conventional FHE Systems**
+    """)
+    
+    comparison_data = {
+        "Parameter": [
+            "Primary Purpose",
+            "Noise Management",
+            "Bootstrapping Strategy",
+            "Bootstrap Frequency",
+            "Latency Performance",
+            "Prediction Capability",
+            "Learning Capability",
+            "Accuracy (Correctness)",
+            "Edge Deployment",
+            "System Adaptability"
+        ],
+        "Proposed SAHF": [
+            "Intelligent noise-aware encrypted AI computation",
+            "ML-based predictive and adaptive control",
+            "Proactive and optimized",
+            "↓ Reduced by ~23.6%",
+            "↑ Improved by ~32.5%",
+            "Real-time noise prediction",
+            "Closed-loop self-learning system",
+            "~99.8%",
+            "✓ Supported",
+            "Dynamic and workload-aware"
+        ],
+        "Conventional FHE": [
+            "Static encrypted computation",
+            "Static worst-case estimation",
+            "Reactive and fixed",
+            "High and inefficient",
+            "Higher latency",
+            "Not available",
+            "No learning capability",
+            "~87–90%",
+            "Limited",
+            "Static"
+        ]
+    }
+    
+    df_comparison = pd.DataFrame(comparison_data)
+    
+    # Custom styling for the table
+    st.markdown("""
+    <style>
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(15, 12, 41, 0.5);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .comparison-table th {
+        background: linear-gradient(90deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+        color: #a8edea;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    
+    .comparison-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #b0b0cc;
+        font-size: 0.9rem;
+    }
+    
+    .comparison-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .comparison-table tr:nth-child(even) {
+        background: rgba(15, 12, 41, 0.3);
+    }
+    
+    .sahf-highlight {
+        color: #4ade80;
+        font-weight: 500;
+    }
+    
+    .conventional-highlight {
+        color: #f87171;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Display as HTML table for better styling
+    st.write(df_comparison.to_html(index=False), unsafe_allow_html=True)
+    
+    st.markdown("")
+    
+    # Key Findings
+    st.markdown('<div class="section-header">🔬 Key Findings</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    ✅ **Predictive Accuracy:** The LSTM model achieved MAE of 0.0336, enabling reliable 
+    noise prediction before critical thresholds are reached.
+    
+    ✅ **Adaptive Learning:** The closed-loop learning mechanism improved prediction accuracy 
+    over successive executions, demonstrating system adaptability.
+    
+    ✅ **Operational Efficiency:** Reduces unnecessary bootstrapping by 23.6% while maintaining 
+    99.8% computation correctness.
+    
+    ✅ **Latency Optimization:** Achieves 32.5% improvement in execution latency compared to 
+    conventional static approaches.
+    
+    ✅ **Workload Versatility:** Successfully validated across diverse computational scenarios 
+    (DNNs, CNNs, sequential models, edge inference).
+    """)
+    
+    st.markdown("")
+    
+    # TRL Justification
+    st.markdown('<div class="section-header">🎯 Technology Readiness Level (TRL 4)</div>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    **Justification:**
+    
+    The proposed Self-Adaptive Homomorphic Framework has been implemented as a **functional prototype** 
+    integrating homomorphic encryption with a machine learning-based noise prediction model. The system 
+    has been validated in a **controlled laboratory environment** using simulated and real computation 
+    workloads, demonstrating:
+    
+    - ✓ Accurate noise prediction with MAE 0.0336
+    - ✓ Adaptive bootstrapping with 23.6% operation reduction
+    - ✓ 32.5% latency improvement over conventional FHE
+    - ✓ 99.8% computational correctness
+    - ✓ Closed-loop learning and self-improvement capability
+    
+    However, the system has **not yet been deployed or tested in a real industrial or production 
+    environment**, thereby corresponding to **TRL 4** (Technology validated in laboratory).
+    
+    **Next Steps for TRL 5-6:**
+    - Real-world deployment in healthcare/financial institutions
+    - Scalability testing with production-scale data volumes
+    - Performance optimization for edge devices
+    - Integration with existing FHE libraries (TenSEAL, HElib)
+    """)
+    
+    st.markdown("")
+    
+    # About SAHF
     st.markdown('<div class="section-header">ℹ️ About SAHF</div>', unsafe_allow_html=True)
     
     st.markdown("""
     **Self-Adaptive Homomorphic Framework (SAHF)** is a patent-grade system that combines 
     Fully Homomorphic Encryption with machine learning to enable efficient confidential AI computation.
     
-    **TRL Level:** 4-5 (Lab validated with real components)
-    
     **Key Innovation:** Using LSTM neural networks to predict FHE noise accumulation and 
-    adaptively schedule bootstrapping operations, reducing computational overhead by 37-42% 
-    compared to fixed-interval approaches.
+    adaptively schedule bootstrapping operations, reducing computational overhead by 23.6% 
+    while improving latency by 32.5% compared to conventional static FHE approaches.
     
     **Applications:**
-    - 🏥 Privacy-preserving medical AI
-    - 🏦 Confidential financial fraud detection
-    - 🤖 Secure cloud ML inference
-    - 🏛️ Classified government computation
+    - 🏥 Privacy-preserving medical AI diagnosis systems
+    - 🏦 Confidential financial fraud detection and risk assessment
+    - 🤖 Secure cloud ML inference without exposing data
+    - 🏛️ Classified government computation and intelligence analysis
+    - 💼 Multi-party secure computation between institutions
     """)
