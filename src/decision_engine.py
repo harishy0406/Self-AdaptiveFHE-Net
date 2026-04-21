@@ -21,8 +21,12 @@ from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass, field
 
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        # In Jupyter and some environments, reconfigure() is not available
+        pass
 
 from .utils import logger, timer, noise_growth_model, get_timestamp
 from .fhe_simulation import CKKSContextManager
