@@ -16,8 +16,12 @@ from functools import wraps
 
 # Force UTF-8 output on Windows
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        # In Jupyter and some environments, reconfigure() is not available
+        pass
 
 
 # ─── Logging Setup ─────────────────────────────────────────────

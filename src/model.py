@@ -18,8 +18,12 @@ import pandas as pd
 from typing import Tuple, Dict, Optional
 
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        # In Jupyter and some environments, reconfigure() is not available
+        pass
 
 from .utils import logger, timer, create_sliding_windows, save_metrics
 

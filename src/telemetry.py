@@ -19,8 +19,12 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
 
 if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        # In Jupyter and some environments, reconfigure() is not available
+        pass
 
 from .utils import logger, get_timestamp
 
