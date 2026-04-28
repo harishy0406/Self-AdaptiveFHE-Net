@@ -23,7 +23,8 @@ from dataclasses import dataclass, field
 if sys.platform == 'win32':
     try:
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace') 
+        # Note: reconfigure() is available in Python 3.7+ and may not be present in all environments
     except (AttributeError, ValueError):
         # In Jupyter and some environments, reconfigure() is not available
         pass
