@@ -327,25 +327,7 @@ class AdaptiveSystem:
             "noise_before": noise_before
         }
     
-    def get_results(self) -> Dict:
-        """Get adaptive system results."""
-        feedback = self.telemetry.get_feedback_summary()
-        
-        return {
-            "system": "Adaptive (ML-Driven)",
-            "total_steps": self.total_steps,
-            "total_bootstraps": self.total_bootstraps,
-            "total_latency": self.total_latency,
-            "avg_noise": float(np.mean(self.noise_history)) if self.noise_history else 0,
-            "max_noise": float(np.max(self.noise_history)) if self.noise_history else 0,
-            "noise_history": self.noise_history,
-            "prediction_history": self.prediction_history,
-            "action_history": self.action_history,
-            "bootstrap_events": self.bootstrap_events,
-            "decision_stats": self.engine.get_stats(),
-            "feedback": feedback,
-            "telemetry_summary": self.telemetry.get_summary()
-        }
+    
 
 
 # ─── Comparison Runner ─────────────────────────────────────────
