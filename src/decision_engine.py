@@ -443,7 +443,44 @@ def run_comparison(num_steps: int = 500,
                 vec_a_a = ctx_adaptive.encrypt_vector([1.0, 2.0, 3.0, 4.0])
                 vec_b_a = ctx_adaptive.encrypt_vector([0.5, 1.5, 2.5, 3.5])
         
+        # Build feature vector for adaptive system
+        tel = ctx_adaptive.get_telemetry()
+        features = np.array([
+            1 if op == "multiply" else 0,
+            tel["depth"],
+            tel["scale"] / 1e12,
+            0.0,  # delta_noise placeholder
+            1.0,  # noise_ratio placeholder
+            tel["since_last_reset"],
+            tel["noise_estimate"]
+        ])
         
+        a_result = adaptive.step(ctx_adaptive, features, op)
+        if a_result["action"] != ACTION_CONTINUE:
+            vec_a_a = ctx_adaptive.encrypt_vector([1.0, 2.0, 3.0, 4.0])
+            vec_b_a = ctx_adaptive.encrypt_vector([0.5, 1.5, 2.5, 3.5])
+        
+        # Safety guard: auto-bootstrap if noise exceeds hard ceiling
+        if ctx_baseline.noise_estimate > 0.95:
+            ctx_baseline.bootstrap(mode="full")
+            baseline.total_bootstraps += 1
+            baseline.total_latency += 7.5  # avg bootstrap cost
+            baseline.bootstrap_events.append(i)
+            vec_a_b = ctx_baseline.encrypt_vector([1.0, 2.0, 3.0, 4.0])
+            vec_b_b = ctx_baseline.encrypt_vector([0.5, 1.5, 2.5, 3.5])
+        
+        if ctx_adaptive.noise_estimate > 0.95:
+            ctx_adaptive.bootstrap(mode="full")
+            adaptive.total_bootstraps += 1
+            adaptive.total_latency += 7.5
+            adaptive.bootstrap_events.append(i)
+            vec_a_a = ctx_adaptive.encrypt_vector([1.0, 2.0, 3.0, 4.0])
+            vec_b_a = ctx_adaptive.encrypt_vector([0.5, 1.5, 2.5, 3.5])
+        
+        if (i + 1) % 100 == 0:
+            logger.info(f"  Step {i+1}/{num_steps} | "
+                       f"B_noise={ctx_baseline.noise_estimate:.4f} "
+                       f"A_noise={ctx_adaptive.noise_estimate:.4f}")
     
     # Compile results
     b_results = baseline.get_results()
