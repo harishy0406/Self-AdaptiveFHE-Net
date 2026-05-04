@@ -498,7 +498,47 @@ elif page == "⚡ Live Simulation":
         vec_b_a = ctx_adaptive.encrypt_vector([0.5, 1.5, 2.5, 3.5])
         
         
+            # Simulation loop
+        for i in range(num_steps):
+            op = ops[i]
             
+            # Baseline operations
+            if op == "add":
+                vec_a_b = ctx_baseline.homomorphic_add(vec_a_b, vec_b_b)
+            else:
+                vec_a_b = ctx_baseline.homomorphic_multiply(vec_a_b, vec_b_b)
+            
+            b_result = baseline.step(ctx_baseline, op)
+            baseline_noise_data.append(ctx_baseline.noise_estimate)
+            
+            if b_result["action"] != ACTION_CONTINUE:
+                baseline_bootstrap_steps.append(i)
+                vec_a_b = ctx_baseline.encrypt_vector([1.0, 2.0, 3.0, 4.0])
+                vec_b_b = ctx_baseline.encrypt_vector([0.5, 1.5, 2.5, 3.5])
+            
+            # Adaptive operations
+            if op == "add":
+                vec_a_a = ctx_adaptive.homomorphic_add(vec_a_a, vec_b_a)
+            else:
+                vec_a_a = ctx_adaptive.homomorphic_multiply(vec_a_a, vec_b_a)
+            
+            tel = ctx_adaptive.get_telemetry()
+            features = np.array([
+                1 if op == "multiply" else 0,
+                tel["depth"], tel["scale"] / 1e12,
+                0.0, 1.0, tel["since_last_reset"],
+                tel["noise_estimate"]
+            ])
+            
+            a_result = adaptive.step(ctx_adaptive, features, op)
+            adaptive_noise_data.append(ctx_adaptive.noise_estimate)
+            adaptive_pred_data.append(a_result.get("predicted_noise", 0))
+            adaptive_actions.append(a_result["action"])
+            
+            if a_result["action"] != ACTION_CONTINUE:
+                adaptive_bootstrap_steps.append(i)
+                vec_a_a = ctx_adaptive.encrypt_vector([1.0, 2.0, 3.0, 4.0])
+                vec_b_a = ctx_adaptive.encrypt_vector([0.5, 1.5, 2.5, 3.5])
             # Auto-safety bootstraps
             if ctx_baseline.noise_estimate > 0.95:
                 ctx_baseline.bootstrap(mode="full")
